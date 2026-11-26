@@ -11,6 +11,7 @@ Run:  python3 main.py        -> writes entry.png next to this file.
 
 import binascii
 import math
+import os
 import struct
 import zlib
 from pathlib import Path
@@ -372,7 +373,12 @@ def main():
     c.text_center(976,
                   "SOURCES: REUTERS - AP - NYT - BBC - THE GUARDIAN",
                   2, (212, 175, 55))
-    out = Path(__file__).resolve().parent / "entry.png"
+    # The grader mounts the repository read-only at /bot and gives the
+    # program a writable /output (MAKEFUN_OUTPUT_DIR). Running it by hand
+    # without that variable writes entry.png next to this file instead.
+    out_dir = Path(os.environ.get(
+        "MAKEFUN_OUTPUT_DIR", Path(__file__).resolve().parent))
+    out = out_dir / "entry.png"
     c.write_png(out)
     print("wrote", out, out.stat().st_size, "bytes")
 
